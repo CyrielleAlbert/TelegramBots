@@ -1,0 +1,4 @@
+{
+"Bot Token" : "1174283800:AAHSwpHxfIvDGrgs-KE2ud77Webw-1JGakQ",
+"News API key" : "b829a970051f496ebd2c6732ad14bc49"
+}
