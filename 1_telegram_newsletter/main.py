@@ -1,6 +1,6 @@
 import requests
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Bot
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageHandler, Filters
 import json
 import News.news as news
 
@@ -9,8 +9,14 @@ pays = ['France','UK','Norway','Spain','USA']
 
 def start(update,context):
     username = update.message.from_user.first_name
-    text = 'Hi ' + username +' ! 😊 Of which country do you want the news today ? \n Please choose :'
+    text = 'Hi ' + username +' ! 😊 \n ' \
+                             'Try /country if you want to receive the news of a country \n' \
+                             'Try /keyword if you want to search with keyword.'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text)
 
+
+def get_news_per_country(update,context):
+    text = 'Of which country do you want the news today ? \n Please choose :'
     buttons = [[InlineKeyboardButton("France", callback_data='1')],
                [InlineKeyboardButton("UK", callback_data='2')],
                #[InlineKeyboardButton("Norway", callback_data='3')],
@@ -71,11 +77,31 @@ def get_news(data):
         articles = news.get_news_from_usa(apikey)
     return articles
 
+def keyword(update,context):
+    text = 'Please write a keyword you want to include in the research.'
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text)
+
+def get_news_with_keyword(update,context):
+    print("hello")
+    keyword = update.effective_message.text
+    articles = news.get_news_from_keyword(apikey, keyword)
+    text = " Here are the 10 lasts news: \n"
+    for i in range(len(articles)):
+        num = i + 1
+        title = articles[i]['title']
+        url = articles[i]['url']
+        text = text + "{}. ".format(num) + str(title) + " (Link: " + str(url) + ")\n"
+    print(text)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=text, disable_web_page_preview=True)
+
 
 def main():
     updater = Updater(bot_token, use_context=True)
     dp = updater.dispatcher
     dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('country', get_news_per_country))
+    dp.add_handler(CommandHandler('keyword', keyword))
+    dp.add_handler(MessageHandler(Filters.text, get_news_with_keyword))
     dp.add_handler(CallbackQueryHandler(buttonHandler))
     updater.start_polling()
     updater.idle()
