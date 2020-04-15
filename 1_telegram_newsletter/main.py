@@ -4,9 +4,9 @@ from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, MessageH
 import json
 import News.news as news
 
-global pays, articles, bot_token, apikey
-pays = ['France','UK','Norway','Spain','USA']
-
+global pays, articles, bot_token, apikey, country_code
+pays = ['France','UK','USA','Norway','Spain']
+country_code = ['fr','gb','us']
 def start(update,context):
     username = update.message.from_user.first_name
     text = 'Hi ' + username +' ! 😊 \n ' \
@@ -21,7 +21,7 @@ def get_news_per_country(update,context):
                [InlineKeyboardButton("UK", callback_data='2')],
                #[InlineKeyboardButton("Norway", callback_data='3')],
                #[InlineKeyboardButton("Spain", callback_data='4')],
-               [InlineKeyboardButton("USA", callback_data='5')]]
+               [InlineKeyboardButton("USA", callback_data='3')]]
     reply_markup = InlineKeyboardMarkup(buttons)
 
     update.message.reply_text(text, reply_markup= reply_markup)
@@ -39,7 +39,7 @@ def buttonHandler(update, context):
         text = "Selected country: "+ pays[int(query.data)-1]
         print(text)
         query.edit_message_text(text=text)
-        articles = get_news(query.data)
+        articles = news.get_news_from_country(apikey, country_code[int(query.data)-1])
         text = " Here are the 10 lasts news from "+ pays[int(query.data)-1]+ " : \n"
         print(text)
         for i in range(len(articles)):
@@ -62,21 +62,6 @@ def buttonHandler(update, context):
         chat_id = update.message.chat_id
         context.bot.send_message(chat_id, "See you soon ! :) ")
 
-
-def get_news(data):
-    data = int(data)
-    if data == 1:
-        articles = news.get_news_from_france(apikey)
-    elif data == 2:
-        articles = news.get_news_from_uk(apikey)
-    elif data == 3:
-        articles = news.get_news_from_norway(apikey)
-    elif data == 4:
-        articles = news.get_news_from_spain(apikey)
-    elif data == 5:
-        articles = news.get_news_from_usa(apikey)
-    return articles
-
 def keyword(update,context):
     text = 'Please write a keyword you want to include in the research.'
     context.bot.send_message(chat_id=update.effective_chat.id, text=text)
@@ -86,6 +71,8 @@ def get_news_with_keyword(update,context):
     keyword = update.effective_message.text
     articles = news.get_news_from_keyword(apikey, keyword)
     text = " Here are the 10 lasts news: \n"
+    if len(articles) == 0:
+        text = "Sorry we have not found any article, try again!"
     for i in range(len(articles)):
         num = i + 1
         title = articles[i]['title']
