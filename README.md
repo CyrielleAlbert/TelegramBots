@@ -10,6 +10,6 @@ Info : I am going to create one Python project per week-end. The goal of this ch
   1. Improvments :
       - [X] Hide Tokens and API key.
       - [ ] UI/UX : Add Emojis.
-      - [ ] Search per categories or keywords.
+      - [X] Search per categories or keywords.
       - [ ] Add other countries.
       
