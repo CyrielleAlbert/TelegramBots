@@ -13,3 +13,14 @@ Info : I am going to create one Python project per week-end. The goal of this ch
       - [X] Search per categories or keywords.
       - [ ] Add other countries.
       
+## Project 2 : Master Chef Bot 
+  1. Info : This is a telegram bot which send 5 random recipes. 
+  1. What I have learned : external API for getting recipes, improvment of telegram Bot.
+  1. Food API from https://spoonacular.com
+  1. Current version : The bot is working but only send 5 random recipes with their URL.
+  1. Improvments :
+      - [ ] Possibility to choose between Breakfast - Lunch - Dinner - Drinks
+      - [ ] UI/UX : Add Emojis.
+      - [ ] Search with keywords.
+      - [ ] Add access to the ingredients needed.
+  
