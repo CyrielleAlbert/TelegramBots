@@ -1,4 +1,4 @@
-# One project per week-end
+# TelegramBots
 
 Info : I am going to create one Python project per week-end. The goal of this challenge is to use news libraries and to focus first on making it work and then the quality. At the end of the week-end, the base of the project should run. All the improvments will be done during sparetime later.
 
